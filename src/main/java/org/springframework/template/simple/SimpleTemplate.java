@@ -16,10 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.springframework.template;
+package org.springframework.template.simple;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.template.Template;
 
 public class SimpleTemplate implements Template {
 
