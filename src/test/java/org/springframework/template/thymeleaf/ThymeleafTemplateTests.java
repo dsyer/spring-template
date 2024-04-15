@@ -31,9 +31,14 @@ import org.thymeleaf.templateresolver.StringTemplateResolver;
 
 public class ThymeleafTemplateTests {
 
-	private static final String TEMPLATE = """
-				<th:block th:text="'Hello, ' + ${name} + '!'"></th:block>
+	private static final String HTML_TEMPLATE = """
+				Hello, <th:block th:text="${name}"></th:block>!
 			""";
+
+	private static final String TEXT_TEMPLATE = """
+				Hello, [(${name})]!
+			""";
+
 	private SpringTemplateEngine engine = new SpringTemplateEngine();
 
 	@BeforeEach
@@ -42,8 +47,20 @@ public class ThymeleafTemplateTests {
 	}
 
 	@Test
-	public void testRender() throws Exception {
-		ThymeleafTemplate template = new ThymeleafTemplate(engine, new TemplateSpec(TEMPLATE, "text/html"));
+	public void testRenderHtml() throws Exception {
+		ThymeleafTemplate template = new ThymeleafTemplate(engine, new TemplateSpec(HTML_TEMPLATE, "text/html"));
+
+		Map<String, Object> context = new HashMap<>();
+		context.put("name", "World");
+
+		String result = template.render(context);
+
+		assertEquals("Hello, World!", result.trim());
+	}
+
+	@Test
+	public void testRenderText() throws Exception {
+		ThymeleafTemplate template = new ThymeleafTemplate(engine, new TemplateSpec(TEXT_TEMPLATE, "text/plain"));
 
 		Map<String, Object> context = new HashMap<>();
 		context.put("name", "World");
