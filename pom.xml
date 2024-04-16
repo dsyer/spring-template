@@ -36,6 +36,7 @@
 
 	<properties>
 		<java.version>17</java.version>
+		<jstachio.version>1.3.5</jstachio.version>
 	</properties>
 
 	<dependencies>
@@ -52,6 +53,11 @@
 			<artifactId>jmustache</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>io.jstach</groupId>
+			<artifactId>jstachio-spring</artifactId>
+			<version>${jstachio.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
@@ -63,4 +69,20 @@
 		</dependency>
 	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<annotationProcessorPaths>
+						<annotationProcessorPath>
+							<groupId>io.jstach</groupId>
+							<artifactId>jstachio-apt</artifactId>
+							<version>${jstachio.version}</version>
+						</annotationProcessorPath>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
