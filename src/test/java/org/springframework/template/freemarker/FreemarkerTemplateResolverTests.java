@@ -18,6 +18,7 @@
  */
 package org.springframework.template.freemarker;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
@@ -25,21 +26,27 @@ import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.template.Template;
+import org.springframework.ui.freemarker.FreeMarkerConfigurationFactory;
 
 import freemarker.template.Configuration;
 
-public class FreemarkerTemplateTests {
+public class FreemarkerTemplateResolverTests {
 
 	private Configuration configuration;
 
 	@BeforeEach
-	public void setUp() {
-		this.configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
+	public void setUp() throws Exception {
+		FreeMarkerConfigurationFactory factory = new FreeMarkerConfigurationFactory();
+		factory.setTemplateLoaderPath("classpath:/");
+		this.configuration = factory.createConfiguration();
 	}
 
 	@Test
-	public void testRender() throws Exception {
-		FreemarkerTemplate template = new FreemarkerTemplate(configuration.getTemplate("src/test/resources/test.ftlh"));
+	public void testResolveAndRender() throws Exception {
+		FreemarkerTemplateResolver resolver = new FreemarkerTemplateResolver(configuration);
+		Template template = resolver.resolve("test");
+		assertThat(template).isNotNull();
 
 		Map<String, Object> context = new HashMap<>();
 		context.put("name", "World");

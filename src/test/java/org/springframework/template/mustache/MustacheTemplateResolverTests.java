@@ -16,8 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.springframework.template.freemarker;
+package org.springframework.template.mustache;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
@@ -25,21 +26,25 @@ import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.template.Template;
 
-import freemarker.template.Configuration;
+import com.samskivert.mustache.Mustache;
+import com.samskivert.mustache.Mustache.Compiler;
 
-public class FreemarkerTemplateTests {
+public class MustacheTemplateResolverTests {
 
-	private Configuration configuration;
+	private Compiler compiler;
 
 	@BeforeEach
 	public void setUp() {
-		this.configuration = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
+		this.compiler = Mustache.compiler();
 	}
 
 	@Test
-	public void testRender() throws Exception {
-		FreemarkerTemplate template = new FreemarkerTemplate(configuration.getTemplate("src/test/resources/test.ftlh"));
+	public void testResolveAndRender() throws Exception {
+		MustacheTemplateResolver resolver = new MustacheTemplateResolver(compiler);
+		Template template = resolver.resolve("hello");
+		assertThat(template).isNotNull();
 
 		Map<String, Object> context = new HashMap<>();
 		context.put("name", "World");
