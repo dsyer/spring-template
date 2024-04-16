@@ -25,7 +25,7 @@ public class FreemarkerTemplateResolver implements TemplateResolver {
 	@Override
 	public Template resolve(String path, MimeType type, Locale locale) {
 		try {
-			return new FreemarkerTemplate(configuration.getTemplate(prefix + path + suffix));
+			return new FreemarkerTemplate(configuration.getTemplate(prefix + path + suffix, locale));
 		} catch (ParseException e) {
 			throw new IllegalStateException(e);
 		}catch (IOException e) {
