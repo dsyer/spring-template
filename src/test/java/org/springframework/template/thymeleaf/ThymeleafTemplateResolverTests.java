@@ -48,6 +48,15 @@ public class ThymeleafTemplateResolverTests {
 	}
 
 	@Test
+	public void testNotResolvedFragment() throws Exception {
+		ThymeleafTemplateResolver resolver = new ThymeleafTemplateResolver(engine);
+		Template template = resolver.resolve("fragments :: garbage");
+		assertThat(template).isNotNull();
+		// Template exists but fragment does not. This is not an error?
+		assertThat(template.render(Map.of())).isEmpty();
+	}
+
+	@Test
 	public void testResolveAndRender() throws Exception {
 		ThymeleafTemplateResolver resolver = new ThymeleafTemplateResolver(engine);
 		Template template = resolver.resolve("hello");
@@ -61,4 +70,17 @@ public class ThymeleafTemplateResolverTests {
 		assertEquals("Hello, World!", result);
 	}
 
+	@Test
+	public void testResolveAndRenderFragment() throws Exception {
+		ThymeleafTemplateResolver resolver = new ThymeleafTemplateResolver(engine);
+		Template template = resolver.resolve("fragments :: hello");
+		assertThat(template).isNotNull();
+
+		Map<String, Object> context = new HashMap<>();
+		context.put("name", "World");
+
+		String result = template.render(context).trim();
+
+		assertEquals("Hello, World!", result);
+	}
 }
