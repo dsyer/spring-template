@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,6 +40,16 @@ public class ThymeleafTemplateTests {
 				Hello, [(${name})]!
 			""";
 
+	private static final String FRAGMENT_TEMPLATE = """
+		<html>
+			<body>
+				<th:block th:fragment="hello">
+					Hello, <th:block th:text="${name}"></th:block>!
+				</th:block>
+			</body>
+		</html>
+			""";
+
 	private SpringTemplateEngine engine = new SpringTemplateEngine();
 
 	@BeforeEach
@@ -49,6 +60,18 @@ public class ThymeleafTemplateTests {
 	@Test
 	public void testRenderHtml() throws Exception {
 		ThymeleafTemplate template = new ThymeleafTemplate(engine, new TemplateSpec(HTML_TEMPLATE, "text/html"));
+
+		Map<String, Object> context = new HashMap<>();
+		context.put("name", "World");
+
+		String result = template.render(context);
+
+		assertEquals("Hello, World!", result.trim());
+	}
+
+	@Test
+	public void testRenderFragment() throws Exception {
+		ThymeleafTemplate template = new ThymeleafTemplate(engine, new TemplateSpec(FRAGMENT_TEMPLATE, Set.of("hello"), "text/html", null));
 
 		Map<String, Object> context = new HashMap<>();
 		context.put("name", "World");
