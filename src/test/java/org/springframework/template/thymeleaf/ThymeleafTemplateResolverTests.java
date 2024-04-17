@@ -22,11 +22,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.template.Template;
+import org.springframework.util.MimeTypeUtils;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
@@ -54,6 +56,14 @@ public class ThymeleafTemplateResolverTests {
 		assertThat(template).isNotNull();
 		// Template exists but fragment does not. This is not an error?
 		assertThat(template.render(Map.of())).isEmpty();
+	}
+
+	@Test
+	public void testMimeTypeNotResolved() throws Exception {
+		ThymeleafTemplateResolver resolver = new ThymeleafTemplateResolver(engine);
+		resolver.setType(MimeTypeUtils.TEXT_HTML);
+		Template template = resolver.resolve("hello", MimeTypeUtils.APPLICATION_JSON, Locale.getDefault());
+		assertThat(template).isNull();
 	}
 
 	@Test

@@ -6,6 +6,7 @@ import java.util.Set;
 import org.springframework.template.Template;
 import org.springframework.template.TemplateResolver;
 import org.springframework.util.MimeType;
+import org.springframework.util.MimeTypeUtils;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.TemplateSpec;
 import org.thymeleaf.context.ExpressionContext;
@@ -22,9 +23,22 @@ public class ThymeleafTemplateResolver implements TemplateResolver {
 
 	private String prefix = "";
 	private String suffix = ".html";
+	private MimeType type = MimeTypeUtils.ALL;
 
 	public ThymeleafTemplateResolver(TemplateEngine engine) {
 		this.engine = engine;
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
+	}
+
+	public void setType(MimeType type) {
+		this.type = type;
 	}
 
 	@Override
@@ -33,8 +47,7 @@ public class ThymeleafTemplateResolver implements TemplateResolver {
 			PathSpec spec = PathSpec.from(engine, path, locale);
 			path = prefix + spec.name() + suffix;
 			TemplateResolution template = resolver.resolveTemplate(engine.getConfiguration(), null, path, null);
-			if (template != null && template.getTemplateResource().exists()) {
-				// TODO: use mime type
+			if (template != null && template.getTemplateResource().exists() && this.type.isCompatibleWith(type)) {
 				return new ThymeleafTemplate(engine, new TemplateSpec(path, spec.selectors(), "text/html", null), locale);
 			}
 		}
@@ -78,4 +91,5 @@ public class ThymeleafTemplateResolver implements TemplateResolver {
 			return new PathSpec(templateName, markupSelectors);
 		}
 	}
+
 }
