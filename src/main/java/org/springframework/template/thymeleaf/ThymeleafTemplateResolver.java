@@ -35,7 +35,7 @@ public class ThymeleafTemplateResolver implements TemplateResolver {
 			TemplateResolution template = resolver.resolveTemplate(engine.getConfiguration(), null, path, null);
 			if (template != null && template.getTemplateResource().exists()) {
 				// TODO: use mime type
-				return new ThymeleafTemplate(engine, new TemplateSpec(path, spec.selectors(), "text/html", null));
+				return new ThymeleafTemplate(engine, new TemplateSpec(path, spec.selectors(), "text/html", null), locale);
 			}
 		}
 		return null;
