@@ -35,6 +35,13 @@ import org.thymeleaf.standard.expression.StandardExpressions;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolution;
 
+/**
+ * A template resolver implementation for Thymeleaf.
+ * This class implements the TemplateResolver interface and provides methods to set the prefix, suffix, and type of templates to be resolved.
+ * The resolve method resolves the template path, type, and locale to find the appropriate template using the configured template engine and template resolvers.
+ * If a matching template is found, it returns a ThymeleafTemplate object representing the resolved template.
+ * If no matching template is found, it returns null.
+ */
 public class ThymeleafTemplateResolver implements TemplateResolver {
 
 	private final TemplateEngine engine;

@@ -20,7 +20,16 @@ package org.springframework.template;
 
 import java.util.Map;
 
+/**
+ * The Template interface represents a template that can be rendered with a given context.
+ */
 public interface Template {
 
-	String render(Map<String,Object> context);
+	/**
+	 * Renders the template with the provided context.
+	 *
+	 * @param context the context containing the variables to be used in rendering the template
+	 * @return the rendered template as a string
+	 */
+	String render(Map<String, Object> context);
 }

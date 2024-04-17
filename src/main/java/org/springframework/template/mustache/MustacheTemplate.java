@@ -22,6 +22,10 @@ import java.util.Map;
 
 import com.samskivert.mustache.Template;
 
+/**
+ * A class that represents a Mustache template implementation.
+ * This class implements the {@link org.springframework.template.Template Template} interface.
+ */
 public class MustacheTemplate implements org.springframework.template.Template {
 
 	private final Template template;

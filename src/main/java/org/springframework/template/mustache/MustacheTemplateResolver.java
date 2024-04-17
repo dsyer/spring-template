@@ -32,6 +32,10 @@ import org.springframework.util.MimeTypeUtils;
 
 import com.samskivert.mustache.Mustache.Compiler;
 
+/**
+ * A template resolver for Mustache templates.
+ * This class implements the TemplateResolver interface and provides the functionality to resolve Mustache templates.
+ */
 public class MustacheTemplateResolver implements TemplateResolver {
 
 	private final Compiler compiler;
@@ -41,22 +45,50 @@ public class MustacheTemplateResolver implements TemplateResolver {
 	private String suffix = ".mustache";
 	private MimeType type = MimeTypeUtils.ALL;
 
+	/**
+	 * Constructs a new MustacheTemplateResolver with the specified compiler.
+	 *
+	 * @param compiler the compiler used to compile Mustache templates
+	 */
 	public MustacheTemplateResolver(Compiler compiler) {
 		this.compiler = compiler;
 	}
 
+	/**
+	 * Sets the prefix for template paths.
+	 *
+	 * @param prefix the prefix for template paths
+	 */
 	public void setPrefix(String prefix) {
 		this.prefix = prefix;
 	}
 
+	/**
+	 * Sets the suffix for template paths.
+	 *
+	 * @param suffix the suffix for template paths
+	 */
 	public void setSuffix(String suffix) {
 		this.suffix = suffix;
 	}
 
+	/**
+	 * Sets the MIME type for the resolved templates.
+	 *
+	 * @param type the MIME type for the resolved templates
+	 */
 	public void setType(MimeType type) {
 		this.type = type;
 	}
 
+	/**
+	 * Resolves a Mustache template based on the given path, MIME type, and locale.
+	 *
+	 * @param path   the path of the template
+	 * @param type   the MIME type of the template
+	 * @param locale the locale for the template
+	 * @return the resolved template, or null if the template cannot be resolved
+	 */
 	@Override
 	public Template resolve(String path, MimeType type, Locale locale) {
 		Resource resource = loader.getResource(prefix + path + suffix);

@@ -23,6 +23,10 @@ import java.util.Map;
 
 import org.springframework.template.Template;
 
+/**
+ * A simple implementation of the Template interface.
+ * This class provides a basic template rendering functionality by replacing placeholders in the template string with corresponding values from a given context.
+ */
 public class SimpleTemplate implements Template {
 
 	private static final int MAX_COUNT = 10;
@@ -32,6 +36,12 @@ public class SimpleTemplate implements Template {
 		this.template = template;
 	}
 
+	/**
+	 * Renders the template by replacing placeholders with values from the given context.
+	 *
+	 * @param context the context containing key-value pairs for replacing placeholders
+	 * @return the rendered template as a string
+	 */
 	@Override
 	public String render(Map<String, Object> context) {
 		String result = template;

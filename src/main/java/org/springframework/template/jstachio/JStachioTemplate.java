@@ -25,16 +25,31 @@ import io.jstach.jstachio.Output.StringOutput;
 import io.jstach.jstachio.context.ContextJStachio;
 import io.jstach.jstachio.context.ContextNode;
 
+/**
+ * Represents a JStachio template that can be rendered with a given model.
+ */
 public class JStachioTemplate implements org.springframework.template.Template {
 
 	private final Object model;
 	private final ContextJStachio jstachio;
 
+	/**
+	 * Constructs a new JStachioTemplate with the specified JStachio instance and model.
+	 *
+	 * @param jstachio the JStachio instance to use for rendering the template
+	 * @param model the model object to be used as the context for rendering the template
+	 */
 	public JStachioTemplate(JStachio jstachio, Object model) {
 		this.jstachio = ContextJStachio.of(jstachio);
 		this.model = model;
 	}
 
+	/**
+	 * Renders the template with the given context and returns the rendered output as a string.
+	 *
+	 * @param context the context map containing the variables to be used during rendering
+	 * @return the rendered output as a string
+	 */
 	@Override
 	public String render(Map<String, Object> context) {
 		StringBuilder output = new StringBuilder();

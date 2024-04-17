@@ -25,16 +25,30 @@ import freemarker.template.Configuration;
 import freemarker.template.SimpleHash;
 import freemarker.template.Template;
 
+/**
+ * Implementation of the {@link org.springframework.template.Template Template} interface for FreeMarker templates.
+ */
 public class FreemarkerTemplate implements org.springframework.template.Template {
 
 	private final Template template;
 	private final Configuration configuration;
 
+	/**
+	 * Constructs a new instance of the FreemarkerTemplate class with the specified template.
+	 *
+	 * @param template the FreeMarker template
+	 */
 	public FreemarkerTemplate(Template template) {
 		this.configuration = template.getConfiguration();
 		this.template = template;
 	}
 
+	/**
+	 * Renders the FreeMarker template using the provided model.
+	 *
+	 * @param model the model containing the data to be rendered
+	 * @return the rendered template as a string
+	 */
 	@Override
 	public String render(Map<String, Object> model) {
 		SimpleHash hash = buildTemplateModel(model);
@@ -47,6 +61,12 @@ public class FreemarkerTemplate implements org.springframework.template.Template
 		return writer.toString();
 	}
 
+	/**
+	 * Builds a FreeMarker template model from the provided model.
+	 *
+	 * @param model the model containing the data to be rendered
+	 * @return the FreeMarker template model
+	 */
 	protected SimpleHash buildTemplateModel(Map<String, Object> model) {
 		SimpleHash hash = new SimpleHash(configuration.getObjectWrapper());
 		hash.putAll(model);
