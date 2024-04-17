@@ -10,6 +10,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.template.Template;
 import org.springframework.template.TemplateResolver;
 import org.springframework.util.MimeType;
+import org.springframework.util.MimeTypeUtils;
 
 import com.samskivert.mustache.Mustache.Compiler;
 
@@ -20,15 +21,28 @@ public class MustacheTemplateResolver implements TemplateResolver {
 
 	private String prefix = "";
 	private String suffix = ".mustache";
+	private MimeType type = MimeTypeUtils.ALL;
 
 	public MustacheTemplateResolver(Compiler compiler) {
 		this.compiler = compiler;
 	}
 
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
+	}
+
+	public void setType(MimeType type) {
+		this.type = type;
+	}
+
 	@Override
 	public Template resolve(String path, MimeType type, Locale locale) {
 		Resource resource = loader.getResource(prefix + path + suffix);
-		if (resource == null) {
+		if (resource == null || !this.type.isCompatibleWith(type)) {
 			return null;
 		}
 		try {

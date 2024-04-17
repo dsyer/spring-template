@@ -10,6 +10,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.template.Template;
 import org.springframework.template.TemplateResolver;
 import org.springframework.util.MimeType;
+import org.springframework.util.MimeTypeUtils;
 import org.springframework.util.StreamUtils;
 
 public class SimpleTemplateResolver implements TemplateResolver {
@@ -18,9 +19,22 @@ public class SimpleTemplateResolver implements TemplateResolver {
 
 	private String prefix = "";
 	private String suffix = ".tmpl";
+	private MimeType type = MimeTypeUtils.ALL;
 
 	public SimpleTemplateResolver() {
 		this(new DefaultResourceLoader());
+	}
+
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
+	}
+
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
+	}
+
+	public void setType(MimeType type) {
+		this.type = type;
 	}
 
 	public SimpleTemplateResolver(ResourceLoader loader) {
@@ -31,7 +45,7 @@ public class SimpleTemplateResolver implements TemplateResolver {
 	public Template resolve(String path, MimeType type, Locale locale) {
 		try {
 			Resource resource = loader.getResource(prefix + path + suffix);
-			if (resource == null) {
+			if (resource == null || !this.type.isCompatibleWith(type)) {
 				return null;
 			}
 			String template = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);

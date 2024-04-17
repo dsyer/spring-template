@@ -22,12 +22,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.template.Template;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactory;
+import org.springframework.util.MimeTypeUtils;
 
 import freemarker.template.Configuration;
 
@@ -40,6 +42,14 @@ public class FreemarkerTemplateResolverTests {
 		FreeMarkerConfigurationFactory factory = new FreeMarkerConfigurationFactory();
 		factory.setTemplateLoaderPath("classpath:/");
 		this.configuration = factory.createConfiguration();
+	}
+
+	@Test
+	public void testMimeTypeNotResolved() throws Exception {
+		FreemarkerTemplateResolver resolver = new FreemarkerTemplateResolver(configuration);
+		resolver.setType(MimeTypeUtils.TEXT_HTML);
+		Template template = resolver.resolve("test", MimeTypeUtils.APPLICATION_JSON, Locale.getDefault());
+		assertThat(template).isNull();
 	}
 
 	@Test

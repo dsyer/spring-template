@@ -22,11 +22,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.template.Template;
+import org.springframework.util.MimeTypeUtils;
 
 import com.samskivert.mustache.Mustache;
 import com.samskivert.mustache.Mustache.Compiler;
@@ -38,6 +40,14 @@ public class MustacheTemplateResolverTests {
 	@BeforeEach
 	public void setUp() {
 		this.compiler = Mustache.compiler();
+	}
+
+	@Test
+	public void testMimeTypeNotResolved() throws Exception {
+		MustacheTemplateResolver resolver = new MustacheTemplateResolver(compiler);
+		resolver.setType(MimeTypeUtils.TEXT_HTML);
+		Template template = resolver.resolve("hello", MimeTypeUtils.APPLICATION_JSON, Locale.getDefault());
+		assertThat(template).isNull();
 	}
 
 	@Test

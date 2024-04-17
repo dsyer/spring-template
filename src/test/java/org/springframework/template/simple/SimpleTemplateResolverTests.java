@@ -22,12 +22,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.template.Template;
+import org.springframework.util.MimeTypeUtils;
 
 public class SimpleTemplateResolverTests {
+
+	@Test
+	public void testMimeTypeNotResolved() throws Exception {
+		SimpleTemplateResolver resolver = new SimpleTemplateResolver();
+		resolver.setType(MimeTypeUtils.TEXT_HTML);
+		Template template = resolver.resolve("test", MimeTypeUtils.APPLICATION_JSON, Locale.getDefault());
+		assertThat(template).isNull();
+	}
 
 	@Test
 	public void testResolveAndRender() throws Exception {
