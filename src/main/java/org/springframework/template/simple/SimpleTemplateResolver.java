@@ -31,6 +31,11 @@ import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.util.StreamUtils;
 
+/**
+ * A template resolver implementation that resolves templates using a simple approach.
+ * Templates are resolved by combining a prefix, path, and suffix to form the resource location.
+ * The resolved template is then used to create a new instance of the {@link SimpleTemplate} class.
+ */
 public class SimpleTemplateResolver implements TemplateResolver {
 
 	private final ResourceLoader loader;
