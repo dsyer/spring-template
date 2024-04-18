@@ -57,7 +57,7 @@ public class JStachioTemplateResolverTests {
 		assertThat(template).isNotNull();
 
 		Map<String, Object> context = new HashMap<>();
-		context.put("model", new Model("World"));
+		context.put("model", new TestModel("World"));
 
 		String result = template.render(context);
 
@@ -65,7 +65,7 @@ public class JStachioTemplateResolverTests {
 	}
 
 	@JStache(template = "Hello, {{name}}!")
-	static record Model(String name) {
+	static record TestModel(String name) {
 	}
 
 }

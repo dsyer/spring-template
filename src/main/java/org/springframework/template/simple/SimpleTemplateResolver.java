@@ -40,7 +40,7 @@ public class SimpleTemplateResolver implements TemplateResolver {
 
 	private final ResourceLoader loader;
 
-	private String prefix = "";
+	private String prefix = "templates/";
 	private String suffix = ".tmpl";
 	private MimeType type = MimeTypeUtils.ALL;
 

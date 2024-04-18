@@ -46,7 +46,7 @@ public class ThymeleafTemplateResolver implements TemplateResolver {
 
 	private final TemplateEngine engine;
 
-	private String prefix = "";
+	private String prefix = "templates/";
 	private String suffix = ".html";
 	private MimeType type = MimeTypeUtils.ALL;
 

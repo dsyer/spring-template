@@ -41,7 +41,7 @@ public class MustacheTemplateResolver implements TemplateResolver {
 	private final Compiler compiler;
 	private final ResourceLoader loader = new DefaultResourceLoader();
 
-	private String prefix = "";
+	private String prefix = "templates/";
 	private String suffix = ".mustache";
 	private MimeType type = MimeTypeUtils.ALL;
 

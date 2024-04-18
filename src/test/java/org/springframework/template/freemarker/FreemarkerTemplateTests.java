@@ -39,7 +39,7 @@ public class FreemarkerTemplateTests {
 
 	@Test
 	public void testRender() throws Exception {
-		FreemarkerTemplate template = new FreemarkerTemplate(configuration.getTemplate("src/test/resources/test.ftlh"));
+		FreemarkerTemplate template = new FreemarkerTemplate(configuration.getTemplate("src/test/resources/templates/test.ftlh"));
 
 		Map<String, Object> context = new HashMap<>();
 		context.put("name", "World");

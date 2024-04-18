@@ -33,7 +33,7 @@ public class FreemarkerTemplateResolver implements TemplateResolver {
 
 	private final Configuration configuration;
 
-	private String prefix = "";
+	private String prefix = "templates/";
 	private String suffix = ".ftlh";
 	private MimeType type = MimeTypeUtils.ALL;
 
