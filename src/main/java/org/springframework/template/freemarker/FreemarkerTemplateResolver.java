@@ -33,20 +33,10 @@ public class FreemarkerTemplateResolver implements TemplateResolver {
 
 	private final Configuration configuration;
 
-	private String prefix = "templates/";
-	private String suffix = ".ftlh";
 	private MimeType type = MimeTypeUtils.ALL;
 
 	public FreemarkerTemplateResolver(Configuration configuration) {
 		this.configuration = configuration;
-	}
-
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
-
-	public void setSuffix(String suffix) {
-		this.suffix = suffix;
 	}
 
 	public void setType(MimeType type) {
@@ -59,7 +49,7 @@ public class FreemarkerTemplateResolver implements TemplateResolver {
 			return null;
 		}
 		try {
-			return new FreemarkerTemplate(configuration.getTemplate(prefix + path + suffix, locale));
+			return new FreemarkerTemplate(configuration.getTemplate(path, locale));
 		} catch (ParseException e) {
 			throw new IllegalStateException(e);
 		}catch (IOException e) {

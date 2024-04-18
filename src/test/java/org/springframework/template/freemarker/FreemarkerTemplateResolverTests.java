@@ -28,6 +28,8 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.template.Template;
+import org.springframework.template.path.PathGenerator;
+import org.springframework.template.path.PathGeneratorTemplateResolver;
 import org.springframework.ui.freemarker.FreeMarkerConfigurationFactory;
 import org.springframework.util.MimeTypeUtils;
 
@@ -35,26 +37,27 @@ import freemarker.template.Configuration;
 
 public class FreemarkerTemplateResolverTests {
 
-	private Configuration configuration;
+	private FreemarkerTemplateResolver base;
+	private PathGeneratorTemplateResolver resolver;
 
 	@BeforeEach
 	public void setUp() throws Exception {
 		FreeMarkerConfigurationFactory factory = new FreeMarkerConfigurationFactory();
 		factory.setTemplateLoaderPath("classpath:/");
-		this.configuration = factory.createConfiguration();
+		Configuration  configuration = factory.createConfiguration();
+		base = new FreemarkerTemplateResolver(configuration);
+		resolver = new PathGeneratorTemplateResolver(base, PathGenerator.infix("templates/", ".ftlh"));
 	}
 
 	@Test
 	public void testMimeTypeNotResolved() throws Exception {
-		FreemarkerTemplateResolver resolver = new FreemarkerTemplateResolver(configuration);
-		resolver.setType(MimeTypeUtils.TEXT_HTML);
+		base.setType(MimeTypeUtils.TEXT_HTML);
 		Template template = resolver.resolve("test", MimeTypeUtils.APPLICATION_JSON, Locale.getDefault());
 		assertThat(template).isNull();
 	}
 
 	@Test
 	public void testResolveAndRender() throws Exception {
-		FreemarkerTemplateResolver resolver = new FreemarkerTemplateResolver(configuration);
 		Template template = resolver.resolve("test");
 		assertThat(template).isNotNull();
 

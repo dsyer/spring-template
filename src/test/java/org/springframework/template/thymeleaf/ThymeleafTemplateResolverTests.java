@@ -28,30 +28,33 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.template.Template;
+import org.springframework.template.path.PathGenerator;
+import org.springframework.template.path.PathGeneratorTemplateResolver;
 import org.springframework.util.MimeTypeUtils;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 public class ThymeleafTemplateResolverTests {
 
-	private SpringTemplateEngine engine;
+	private ThymeleafTemplateResolver base;
+	private PathGeneratorTemplateResolver resolver;
 
 	@BeforeEach
 	public void setUp() {
-		this.engine = new SpringTemplateEngine();
-		this.engine.setTemplateResolver(new ClassLoaderTemplateResolver());
+		SpringTemplateEngine engine = new SpringTemplateEngine();
+		engine.setTemplateResolver(new ClassLoaderTemplateResolver());
+		ThymeleafTemplateResolver base = new ThymeleafTemplateResolver(engine);
+		resolver = new PathGeneratorTemplateResolver(base, PathGenerator.infix("templates/", ".html"));
 	}
 
 	@Test
 	public void testNotResolved() throws Exception {
-		ThymeleafTemplateResolver resolver = new ThymeleafTemplateResolver(engine);
 		Template template = resolver.resolve("test");
 		assertThat(template).isNull();
 	}
 
 	@Test
 	public void testNotResolvedFragment() throws Exception {
-		ThymeleafTemplateResolver resolver = new ThymeleafTemplateResolver(engine);
 		Template template = resolver.resolve("fragments :: garbage");
 		assertThat(template).isNotNull();
 		// Template exists but fragment does not. This is not an error?
@@ -60,15 +63,13 @@ public class ThymeleafTemplateResolverTests {
 
 	@Test
 	public void testMimeTypeNotResolved() throws Exception {
-		ThymeleafTemplateResolver resolver = new ThymeleafTemplateResolver(engine);
-		resolver.setType(MimeTypeUtils.TEXT_HTML);
+		base.setType(MimeTypeUtils.TEXT_HTML);
 		Template template = resolver.resolve("hello", MimeTypeUtils.APPLICATION_JSON, Locale.getDefault());
 		assertThat(template).isNull();
 	}
 
 	@Test
 	public void testResolveAndRender() throws Exception {
-		ThymeleafTemplateResolver resolver = new ThymeleafTemplateResolver(engine);
 		Template template = resolver.resolve("hello");
 		assertThat(template).isNotNull();
 
@@ -82,7 +83,6 @@ public class ThymeleafTemplateResolverTests {
 
 	@Test
 	public void testResolveAndRenderFragment() throws Exception {
-		ThymeleafTemplateResolver resolver = new ThymeleafTemplateResolver(engine);
 		Template template = resolver.resolve("fragments :: hello");
 		assertThat(template).isNotNull();
 

@@ -40,20 +40,10 @@ public class SimpleTemplateResolver implements TemplateResolver {
 
 	private final ResourceLoader loader;
 
-	private String prefix = "templates/";
-	private String suffix = ".tmpl";
 	private MimeType type = MimeTypeUtils.ALL;
 
 	public SimpleTemplateResolver() {
 		this(new DefaultResourceLoader());
-	}
-
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
-
-	public void setSuffix(String suffix) {
-		this.suffix = suffix;
 	}
 
 	public void setType(MimeType type) {
@@ -67,7 +57,7 @@ public class SimpleTemplateResolver implements TemplateResolver {
 	@Override
 	public Template resolve(String path, MimeType type, Locale locale) {
 		try {
-			Resource resource = loader.getResource(prefix + path + suffix);
+			Resource resource = loader.getResource(path);
 			if (resource == null || !this.type.isCompatibleWith(type)) {
 				return null;
 			}

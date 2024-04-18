@@ -41,8 +41,6 @@ public class MustacheTemplateResolver implements TemplateResolver {
 	private final Compiler compiler;
 	private final ResourceLoader loader = new DefaultResourceLoader();
 
-	private String prefix = "templates/";
-	private String suffix = ".mustache";
 	private MimeType type = MimeTypeUtils.ALL;
 
 	/**
@@ -52,24 +50,6 @@ public class MustacheTemplateResolver implements TemplateResolver {
 	 */
 	public MustacheTemplateResolver(Compiler compiler) {
 		this.compiler = compiler;
-	}
-
-	/**
-	 * Sets the prefix for template paths.
-	 *
-	 * @param prefix the prefix for template paths
-	 */
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
-
-	/**
-	 * Sets the suffix for template paths.
-	 *
-	 * @param suffix the suffix for template paths
-	 */
-	public void setSuffix(String suffix) {
-		this.suffix = suffix;
 	}
 
 	/**
@@ -91,7 +71,7 @@ public class MustacheTemplateResolver implements TemplateResolver {
 	 */
 	@Override
 	public Template resolve(String path, MimeType type, Locale locale) {
-		Resource resource = loader.getResource(prefix + path + suffix);
+		Resource resource = loader.getResource(path);
 		if (resource == null || !this.type.isCompatibleWith(type)) {
 			return null;
 		}

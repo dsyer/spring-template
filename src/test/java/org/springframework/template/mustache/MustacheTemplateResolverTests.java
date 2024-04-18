@@ -28,6 +28,8 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.template.Template;
+import org.springframework.template.path.PathGenerator;
+import org.springframework.template.path.PathGeneratorTemplateResolver;
 import org.springframework.util.MimeTypeUtils;
 
 import com.samskivert.mustache.Mustache;
@@ -35,24 +37,25 @@ import com.samskivert.mustache.Mustache.Compiler;
 
 public class MustacheTemplateResolverTests {
 
-	private Compiler compiler;
+	private MustacheTemplateResolver base;
+	private PathGeneratorTemplateResolver resolver;
 
 	@BeforeEach
 	public void setUp() {
-		this.compiler = Mustache.compiler();
+		Compiler compiler = Mustache.compiler();
+		base = new MustacheTemplateResolver(compiler);
+		resolver = new PathGeneratorTemplateResolver(base, PathGenerator.infix("templates/", ".mustache"));
 	}
 
 	@Test
 	public void testMimeTypeNotResolved() throws Exception {
-		MustacheTemplateResolver resolver = new MustacheTemplateResolver(compiler);
-		resolver.setType(MimeTypeUtils.TEXT_HTML);
+		base.setType(MimeTypeUtils.TEXT_HTML);
 		Template template = resolver.resolve("hello", MimeTypeUtils.APPLICATION_JSON, Locale.getDefault());
 		assertThat(template).isNull();
 	}
 
 	@Test
 	public void testResolveAndRender() throws Exception {
-		MustacheTemplateResolver resolver = new MustacheTemplateResolver(compiler);
 		Template template = resolver.resolve("hello");
 		assertThat(template).isNotNull();
 

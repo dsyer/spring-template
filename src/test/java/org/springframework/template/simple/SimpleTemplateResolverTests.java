@@ -25,23 +25,33 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.template.Template;
+import org.springframework.template.path.PathGenerator;
+import org.springframework.template.path.PathGeneratorTemplateResolver;
 import org.springframework.util.MimeTypeUtils;
 
 public class SimpleTemplateResolverTests {
 
+	private SimpleTemplateResolver base;
+	private PathGeneratorTemplateResolver resolver;
+
+	@BeforeEach
+	public void setUp() {
+		base = new SimpleTemplateResolver();
+		resolver = new PathGeneratorTemplateResolver(base, PathGenerator.infix("templates/", ".tmpl"));
+	}
+
 	@Test
 	public void testMimeTypeNotResolved() throws Exception {
-		SimpleTemplateResolver resolver = new SimpleTemplateResolver();
-		resolver.setType(MimeTypeUtils.TEXT_HTML);
+		base.setType(MimeTypeUtils.TEXT_HTML);
 		Template template = resolver.resolve("test", MimeTypeUtils.APPLICATION_JSON, Locale.getDefault());
 		assertThat(template).isNull();
 	}
 
 	@Test
 	public void testResolveAndRender() throws Exception {
-		SimpleTemplateResolver resolver = new SimpleTemplateResolver();
 		Template template = resolver.resolve("test");
 		assertThat(template).isNotNull();
 

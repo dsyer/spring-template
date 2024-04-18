@@ -51,21 +51,11 @@ public class ThymeleafTemplateResolver implements TemplateResolver {
 
 	private final TemplateEngine engine;
 
-	private String prefix = "templates/";
-	private String suffix = ".html";
 	private MimeType type = MimeTypeUtils.ALL;
 	private TemplateMode mode;
 
 	public ThymeleafTemplateResolver(TemplateEngine engine) {
 		this.engine = engine;
-	}
-
-	public void setPrefix(String prefix) {
-		this.prefix = prefix;
-	}
-
-	public void setSuffix(String suffix) {
-		this.suffix = suffix;
 	}
 
 	public void setType(MimeType type) {
@@ -87,7 +77,7 @@ public class ThymeleafTemplateResolver implements TemplateResolver {
 	public Template resolve(String path, MimeType type, Locale locale) {
 		for (ITemplateResolver resolver : engine.getTemplateResolvers()) {
 			PathSpec spec = PathSpec.from(engine, path, locale);
-			path = prefix + spec.name() + suffix;
+			path = spec.name();
 			TemplateResolution template = resolver.resolveTemplate(engine.getConfiguration(), null, path, null);
 			if (template != null && template.getTemplateResource().exists() && this.type.isCompatibleWith(type)) {
 				if (this.mode != null) {
