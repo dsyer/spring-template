@@ -32,14 +32,19 @@ import org.thymeleaf.exceptions.TemplateProcessingException;
 import org.thymeleaf.standard.expression.FragmentExpression;
 import org.thymeleaf.standard.expression.IStandardExpressionParser;
 import org.thymeleaf.standard.expression.StandardExpressions;
+import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolution;
 
 /**
  * A template resolver implementation for Thymeleaf.
- * This class implements the TemplateResolver interface and provides methods to set the prefix, suffix, and type of templates to be resolved.
- * The resolve method resolves the template path, type, and locale to find the appropriate template using the configured template engine and template resolvers.
- * If a matching template is found, it returns a ThymeleafTemplate object representing the resolved template.
+ * This class implements the TemplateResolver interface and provides methods to
+ * set the prefix, suffix, and type of templates to be resolved.
+ * The resolve method resolves the template path, type, and locale to find the
+ * appropriate template using the configured template engine and template
+ * resolvers.
+ * If a matching template is found, it returns a ThymeleafTemplate object
+ * representing the resolved template.
  * If no matching template is found, it returns null.
  */
 public class ThymeleafTemplateResolver implements TemplateResolver {
@@ -49,6 +54,7 @@ public class ThymeleafTemplateResolver implements TemplateResolver {
 	private String prefix = "templates/";
 	private String suffix = ".html";
 	private MimeType type = MimeTypeUtils.ALL;
+	private TemplateMode mode;
 
 	public ThymeleafTemplateResolver(TemplateEngine engine) {
 		this.engine = engine;
@@ -66,6 +72,17 @@ public class ThymeleafTemplateResolver implements TemplateResolver {
 		this.type = type;
 	}
 
+	/**
+	 * Forces all resolved templates to have the same Thymeleaf template mode.
+	 * Default is null, which results in Thymeleaf assigning a template mode based
+	 * on the resource path (e.g. <code>*.html</code> means <code>HTML</code>).
+	 * 
+	 * @param mode the template mode to assign to resolved templates
+	 */
+	public void setMode(TemplateMode mode) {
+		this.mode = mode;
+	}
+
 	@Override
 	public Template resolve(String path, MimeType type, Locale locale) {
 		for (ITemplateResolver resolver : engine.getTemplateResolvers()) {
@@ -73,7 +90,12 @@ public class ThymeleafTemplateResolver implements TemplateResolver {
 			path = prefix + spec.name() + suffix;
 			TemplateResolution template = resolver.resolveTemplate(engine.getConfiguration(), null, path, null);
 			if (template != null && template.getTemplateResource().exists() && this.type.isCompatibleWith(type)) {
-				return new ThymeleafTemplate(engine, new TemplateSpec(path, spec.selectors(), "text/html", null), locale);
+				if (this.mode != null) {
+					return new ThymeleafTemplate(engine, new TemplateSpec(path, spec.selectors(), this.mode, null),
+							locale);
+				}
+				return new ThymeleafTemplate(engine, new TemplateSpec(path, spec.selectors(), type.toString(), null),
+						locale);
 			}
 		}
 		return null;
