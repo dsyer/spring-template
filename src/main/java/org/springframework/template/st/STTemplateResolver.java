@@ -39,6 +39,9 @@ public class STTemplateResolver implements TemplateResolver {
 	private MimeType type = MimeTypeUtils.ALL;
 	private PathGenerator paths = PathGenerator.infix("templates/", ".st");
 
+	private char start = '<';
+	private char end = '>';
+
 	public STTemplateResolver(ResourceLoader loader) {
 		this.loader = loader;
 	}
@@ -49,6 +52,14 @@ public class STTemplateResolver implements TemplateResolver {
 
 	public void setType(MimeType type) {
 		this.type = type;
+	}
+
+	public void setStart(char start) {
+		this.start = start;
+	}
+
+	public void setEnd(char end) {
+		this.end = end;
 	}
 
 	/**
@@ -72,7 +83,7 @@ public class STTemplateResolver implements TemplateResolver {
 					return null;
 				}
 				String template = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
-				return new STTemplate(template);
+				return new STTemplate(template, locale, start, end);
 			} catch (IOException e) {
 			}
 		}

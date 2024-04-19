@@ -30,15 +30,19 @@ public class STTemplate implements org.springframework.template.Template {
 
 	private final String template;
 	private final Locale locale;
+	private final char start;
+	private final char end;
 
 	/**
 	 * Constructs a new instance of the ST class with the specified template.
 	 *
 	 * @param template the string template
 	 */
-	public STTemplate(String template, Locale locale) {
+	public STTemplate(String template, Locale locale, char start, char end) {
 		this.template = template;
 		this.locale = locale;
+		this.start = start;
+		this.end = end;
 	}
 
 	/**
@@ -46,8 +50,8 @@ public class STTemplate implements org.springframework.template.Template {
 	 *
 	 * @param template the string template
 	 */
-	public STTemplate(String template) {
-		this(template, Locale.getDefault());
+	public STTemplate(String template, Locale locale) {
+		this(template, locale, '<', '>');
 	}
 
 	/**
@@ -58,7 +62,7 @@ public class STTemplate implements org.springframework.template.Template {
 	 */
 	@Override
 	public String render(Map<String, Object> model) {
-		ST template = new ST(this.template);
+		ST template = new ST(this.template, this.start, this.end);
 		for (String key : model.keySet()) {
 			template.add(key, model.get(key));
 		}

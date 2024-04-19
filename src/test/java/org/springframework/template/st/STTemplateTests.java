@@ -21,6 +21,7 @@ package org.springframework.template.st;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,7 @@ public class STTemplateTests {
 
 	@Test
 	public void testRender() throws Exception {
-		STTemplate template = new STTemplate("Hello, <name>!");
+		STTemplate template = new STTemplate("Hello, <name>!", Locale.getDefault());
 
 		Map<String, Object> context = new HashMap<>();
 		context.put("name", "World");
