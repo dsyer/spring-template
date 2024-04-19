@@ -28,24 +28,20 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.template.Template;
-import org.springframework.template.path.PathGenerator;
-import org.springframework.template.path.PathGeneratorTemplateResolver;
 import org.springframework.util.MimeTypeUtils;
 
 public class SimpleTemplateResolverTests {
 
-	private SimpleTemplateResolver base;
-	private PathGeneratorTemplateResolver resolver;
+	private SimpleTemplateResolver resolver;
 
 	@BeforeEach
 	public void setUp() {
-		base = new SimpleTemplateResolver();
-		resolver = new PathGeneratorTemplateResolver(base, PathGenerator.infix("templates/", ".tmpl"));
+		resolver = new SimpleTemplateResolver();
 	}
 
 	@Test
 	public void testMimeTypeNotResolved() throws Exception {
-		base.setType(MimeTypeUtils.TEXT_HTML);
+		resolver.setType(MimeTypeUtils.TEXT_HTML);
 		Template template = resolver.resolve("test", MimeTypeUtils.APPLICATION_JSON, Locale.getDefault());
 		assertThat(template).isNull();
 	}

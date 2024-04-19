@@ -27,20 +27,25 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.template.Template;
 import org.springframework.template.TemplateResolver;
+import org.springframework.template.path.PathGenerator;
 import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
 import org.springframework.util.StreamUtils;
 
 /**
- * A template resolver implementation that resolves templates using a simple approach.
- * Templates are resolved by combining a prefix, path, and suffix to form the resource location.
- * The resolved template is then used to create a new instance of the {@link SimpleTemplate} class.
+ * A template resolver implementation that resolves templates using a simple
+ * approach.
+ * Templates are resolved by combining a prefix, path, and suffix to form the
+ * resource location.
+ * The resolved template is then used to create a new instance of the
+ * {@link SimpleTemplate} class.
  */
 public class SimpleTemplateResolver implements TemplateResolver {
 
 	private final ResourceLoader loader;
 
 	private MimeType type = MimeTypeUtils.ALL;
+	private PathGenerator paths = PathGenerator.infix("templates/", ".tmpl");
 
 	public SimpleTemplateResolver() {
 		this(new DefaultResourceLoader());
@@ -50,23 +55,32 @@ public class SimpleTemplateResolver implements TemplateResolver {
 		this.type = type;
 	}
 
+	/**
+	 * Sets the path generator for resolving template paths.
+	 *
+	 * @param paths the path generator to set
+	 */
+	public void setPaths(PathGenerator paths) {
+		this.paths = paths;
+	}
+
 	public SimpleTemplateResolver(ResourceLoader loader) {
 		this.loader = loader;
 	}
 
 	@Override
 	public Template resolve(String path, MimeType type, Locale locale) {
-		try {
-			Resource resource = loader.getResource(path);
-			if (resource == null || !this.type.isCompatibleWith(type)) {
-				return null;
-			}
-			String template = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
-			return new SimpleTemplate(template);
-		}catch (IOException e) {
-			return null;
+		for (String key : paths.generate(path)) {
+			try {
+				Resource resource = loader.getResource(key);
+				if (resource == null || !this.type.isCompatibleWith(type)) {
+					return null;
+				}
+				String template = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+				return new SimpleTemplate(template);
+			} catch (IOException e) {}
 		}
+		return null;
 	}
-
 
 }

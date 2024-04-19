@@ -23,6 +23,7 @@ import java.util.Locale;
 
 import org.springframework.template.Template;
 import org.springframework.template.TemplateResolver;
+import org.springframework.template.path.PathGenerator;
 import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
 
@@ -34,6 +35,7 @@ public class FreemarkerTemplateResolver implements TemplateResolver {
 	private final Configuration configuration;
 
 	private MimeType type = MimeTypeUtils.ALL;
+	private PathGenerator paths = PathGenerator.infix("templates/", ".ftlh");
 
 	public FreemarkerTemplateResolver(Configuration configuration) {
 		this.configuration = configuration;
@@ -43,19 +45,29 @@ public class FreemarkerTemplateResolver implements TemplateResolver {
 		this.type = type;
 	}
 
+	/**
+	 * Sets the path generator for resolving template paths.
+	 *
+	 * @param paths the path generator to set
+	 */
+	public void setPaths(PathGenerator paths) {
+		this.paths = paths;
+	}
+
 	@Override
 	public Template resolve(String path, MimeType type, Locale locale) {
 		if (!this.type.isCompatibleWith(type)) {
 			return null;
 		}
-		try {
-			return new FreemarkerTemplate(configuration.getTemplate(path, locale));
-		} catch (ParseException e) {
-			throw new IllegalStateException(e);
-		}catch (IOException e) {
-			return null;
+		for (String key : paths.generate(path)) {
+			try {
+				return new FreemarkerTemplate(configuration.getTemplate(key, locale));
+			} catch (ParseException e) {
+				throw new IllegalStateException(e);
+			} catch (IOException e) {
+			}
 		}
+		return null;
 	}
-
 
 }

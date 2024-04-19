@@ -28,23 +28,19 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.template.Template;
-import org.springframework.template.path.PathGenerator;
-import org.springframework.template.path.PathGeneratorTemplateResolver;
 import org.springframework.util.MimeTypeUtils;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 public class ThymeleafTemplateResolverTests {
 
-	private ThymeleafTemplateResolver base;
-	private PathGeneratorTemplateResolver resolver;
+	private ThymeleafTemplateResolver resolver;
 
 	@BeforeEach
 	public void setUp() {
 		SpringTemplateEngine engine = new SpringTemplateEngine();
 		engine.setTemplateResolver(new ClassLoaderTemplateResolver());
-		ThymeleafTemplateResolver base = new ThymeleafTemplateResolver(engine);
-		resolver = new PathGeneratorTemplateResolver(base, PathGenerator.infix("templates/", ".html"));
+		resolver = new ThymeleafTemplateResolver(engine);
 	}
 
 	@Test
@@ -63,7 +59,7 @@ public class ThymeleafTemplateResolverTests {
 
 	@Test
 	public void testMimeTypeNotResolved() throws Exception {
-		base.setType(MimeTypeUtils.TEXT_HTML);
+		resolver.setType(MimeTypeUtils.TEXT_HTML);
 		Template template = resolver.resolve("hello", MimeTypeUtils.APPLICATION_JSON, Locale.getDefault());
 		assertThat(template).isNull();
 	}

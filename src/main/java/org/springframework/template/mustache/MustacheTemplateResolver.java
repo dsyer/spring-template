@@ -27,6 +27,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.template.Template;
 import org.springframework.template.TemplateResolver;
+import org.springframework.template.path.PathGenerator;
 import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
 
@@ -34,7 +35,8 @@ import com.samskivert.mustache.Mustache.Compiler;
 
 /**
  * A template resolver for Mustache templates.
- * This class implements the TemplateResolver interface and provides the functionality to resolve Mustache templates.
+ * This class implements the TemplateResolver interface and provides the
+ * functionality to resolve Mustache templates.
  */
 public class MustacheTemplateResolver implements TemplateResolver {
 
@@ -42,6 +44,7 @@ public class MustacheTemplateResolver implements TemplateResolver {
 	private final ResourceLoader loader = new DefaultResourceLoader();
 
 	private MimeType type = MimeTypeUtils.ALL;
+	private PathGenerator paths = PathGenerator.infix("templates/", ".mustache");
 
 	/**
 	 * Constructs a new MustacheTemplateResolver with the specified compiler.
@@ -62,6 +65,15 @@ public class MustacheTemplateResolver implements TemplateResolver {
 	}
 
 	/**
+	 * Sets the path generator for resolving template paths.
+	 *
+	 * @param paths the path generator to set
+	 */
+	public void setPaths(PathGenerator paths) {
+		this.paths = paths;
+	}
+
+	/**
 	 * Resolves a Mustache template based on the given path, MIME type, and locale.
 	 *
 	 * @param path   the path of the template
@@ -71,15 +83,20 @@ public class MustacheTemplateResolver implements TemplateResolver {
 	 */
 	@Override
 	public Template resolve(String path, MimeType type, Locale locale) {
-		Resource resource = loader.getResource(path);
-		if (resource == null || !this.type.isCompatibleWith(type)) {
+		if (!this.type.isCompatibleWith(type)) {
 			return null;
 		}
-		try {
-			return new MustacheTemplate(compiler.compile(new InputStreamReader(resource.getInputStream())));
-		} catch (IOException e) {
-			throw new IllegalStateException(e);
+		for (String key : paths.generate(path)) {
+			Resource resource = loader.getResource(key);
+			if (resource != null && resource.exists()) {
+				try {
+					return new MustacheTemplate(compiler.compile(new InputStreamReader(resource.getInputStream())));
+				} catch (IOException e) {
+					throw new IllegalStateException(e);
+				}
+			}
 		}
+		return null;
 	}
 
 }

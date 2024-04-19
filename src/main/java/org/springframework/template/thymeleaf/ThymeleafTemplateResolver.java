@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.springframework.template.Template;
 import org.springframework.template.TemplateResolver;
+import org.springframework.template.path.PathGenerator;
 import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
 import org.thymeleaf.TemplateEngine;
@@ -53,6 +54,7 @@ public class ThymeleafTemplateResolver implements TemplateResolver {
 
 	private MimeType type = MimeTypeUtils.ALL;
 	private TemplateMode mode;
+	private PathGenerator paths = PathGenerator.infix("templates/", ".html");
 
 	public ThymeleafTemplateResolver(TemplateEngine engine) {
 		this.engine = engine;
@@ -60,6 +62,15 @@ public class ThymeleafTemplateResolver implements TemplateResolver {
 
 	public void setType(MimeType type) {
 		this.type = type;
+	}
+
+	/**
+	 * Sets the path generator for resolving template paths.
+	 *
+	 * @param paths the path generator to set
+	 */
+	public void setPaths(PathGenerator paths) {
+		this.paths = paths;
 	}
 
 	/**
@@ -77,15 +88,16 @@ public class ThymeleafTemplateResolver implements TemplateResolver {
 	public Template resolve(String path, MimeType type, Locale locale) {
 		for (ITemplateResolver resolver : engine.getTemplateResolvers()) {
 			PathSpec spec = PathSpec.from(engine, path, locale);
-			path = spec.name();
-			TemplateResolution template = resolver.resolveTemplate(engine.getConfiguration(), null, path, null);
-			if (template != null && template.getTemplateResource().exists() && this.type.isCompatibleWith(type)) {
-				if (this.mode != null) {
-					return new ThymeleafTemplate(engine, new TemplateSpec(path, spec.selectors(), this.mode, null),
+			for (String key : paths.generate(spec.name())) {
+				TemplateResolution template = resolver.resolveTemplate(engine.getConfiguration(), null, key, null);
+				if (template != null && template.getTemplateResource().exists() && this.type.isCompatibleWith(type)) {
+					if (this.mode != null) {
+						return new ThymeleafTemplate(engine, new TemplateSpec(key, spec.selectors(), this.mode, null),
+								locale);
+					}
+					return new ThymeleafTemplate(engine, new TemplateSpec(key, spec.selectors(), type.toString(), null),
 							locale);
 				}
-				return new ThymeleafTemplate(engine, new TemplateSpec(path, spec.selectors(), type.toString(), null),
-						locale);
 			}
 		}
 		return null;
