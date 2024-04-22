@@ -1,27 +1,58 @@
-package org.springframework.template.webmvc;
+package org.springframework.template.webmvc.view;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Controller;
 import org.springframework.template.Template;
 import org.springframework.template.simple.SimpleTemplate;
+import org.springframework.template.webmvc.TemplateReturnValueHandler;
+import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import reactor.core.publisher.Flux;
 
+@WebMvcTest(ApplicationTests.Application.class)
 public class ApplicationTests {
+
+	@Autowired
+	private MockMvc mockMvc;
+
+	@Test
+	public void index() throws Exception {
+		this.mockMvc.perform(get("/"))
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("Hello, World!")));
+	}
+
+	@Test
+	public void hello() throws Exception {
+		this.mockMvc.perform(get("/hello"))
+				.andExpect(status().isOk())
+				.andExpect(content().string(containsString("Yo, World!")));
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
 
 	@SpringBootApplication
-	@RestController
+	@Controller
 	public static class Application {
 
 		private Template index;
@@ -35,19 +66,32 @@ public class ApplicationTests {
 		}
 
 		@GetMapping("/")
-		public String index() {
-			return index.render(Map.of("name", "World"));
+		public Template index(Map<String, Object> model) {
+			model.put("name", "World");
+			return index;
 		}
 
 		@GetMapping("/hello")
-		public String hello() {
-			return hello.render(Map.of("name", "World"));
+		public Template hello(Map<String, Object> model) {
+			model.put("name", "World");
+			return hello;
 		}
 
 		@GetMapping(path = "/stream", produces = "text/event-stream")
 		public Flux<String> stream() {
 			return Flux.interval(Duration.ofSeconds(2))
 					.map(count -> event.render(Map.of("count", count, "date", System.currentTimeMillis())));
+		}
+
+		@Bean
+		public WebMvcConfigurer webConfigurer() {
+			return new WebMvcConfigurer() {
+				@Override
+				public void addReturnValueHandlers(List<HandlerMethodReturnValueHandler> handlers) {
+					handlers.add(new TemplateReturnValueHandler());
+				}
+			};
+
 		}
 
 	}
