@@ -1,10 +1,7 @@
 package org.springframework.template.webmvc;
 
-import java.io.IOException;
-import java.util.List;
+import java.time.Duration;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,7 +11,8 @@ import org.springframework.template.Template;
 import org.springframework.template.simple.SimpleTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import reactor.core.publisher.Flux;
 
 public class ApplicationTests {
 
@@ -46,23 +44,10 @@ public class ApplicationTests {
 			return hello.render(Map.of("name", "World"));
 		}
 
-		@GetMapping("/stream")
-		public SseEmitter stream() {
-			SseEmitter emitter = new SseEmitter();
-			ExecutorService executor = Executors.newSingleThreadExecutor();
-			executor.execute(() -> {
-				try {
-					for (int i=0; i<10; i++) {
-						Thread.sleep(2000L);
-						emitter.send(event.render(Map.of("count", i, "date", System.currentTimeMillis())));
-					}
-					emitter.complete();
-				} catch (Exception e) {
-					emitter.completeWithError(e);
-				}
-			});
-			executor.shutdown();
-			return emitter;
+		@GetMapping(path = "/stream", produces = "text/event-stream")
+		public Flux<String> stream() {
+			return Flux.interval(Duration.ofSeconds(2))
+					.map(count -> event.render(Map.of("count", count, "date", System.currentTimeMillis())));
 		}
 
 	}
