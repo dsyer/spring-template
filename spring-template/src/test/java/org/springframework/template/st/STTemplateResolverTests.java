@@ -28,7 +28,6 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.template.Template;
-import org.springframework.template.st.STTemplateResolver;
 import org.springframework.util.MimeTypeUtils;
 
 public class STTemplateResolverTests {
