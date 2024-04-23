@@ -1,0 +1,14 @@
+app.menus:
+  - title: home
+    name: Home
+    path: /
+    glyph: home
+  - title: greet
+    name: Greet
+    path: /greet
+    glyph: thumbs-up
+
+spring:
+  threads:
+    virtual:
+      enabled: true

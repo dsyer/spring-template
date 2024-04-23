@@ -11,18 +11,45 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class SampleController {
 
-	@GetMapping(path = "/")
-	String user(Map<String, Object> model) {
+	private final Application application;
+
+	public SampleController(Application application) {
+		this.application = application;
+	}
+
+	@GetMapping(path = "/",  headers = "hx-request=true")
+	String index(Map<String, Object> model) {
+		menu(model, "home");
 		model.put("message", "Welcome");
 		model.put("time", new Date());
+		return "index::main,layout::menu";
+	}
+
+	@GetMapping(path = "/")
+	String indexFullPage(Map<String, Object> model) {
+		index(model);
 		return "index";
 	}
 
-	@GetMapping(path = "/greet")
+	@GetMapping(path = "/greet",  headers = "hx-request=true")
 	String greet(Map<String, Object> model) {
+		menu(model, "greet");
 		model.put("greeting", "Hello World");
 		model.put("time", new Date());
+		return "greet::main,layout::menu";
+	}
+
+	@GetMapping(path = "/greet")
+	String greetFullPage(Map<String, Object> model) {
+		greet(model);
 		return "greet";
+	}
+
+	@GetMapping(path = "/menu")
+	String menu(Map<String, Object> model, @RequestParam(defaultValue = "home") String active) {
+		application.accept(Map.of("active", active));
+		model.put("app", application);
+		return "layout::menu";
 	}
 
 	@GetMapping(path = "/logo")
@@ -36,12 +63,6 @@ public class SampleController {
 		model.put("greeting", "Hello " + name);
 		model.put("name", name);
 		return "greet";
-	}
-
-	@PostMapping(path = "/greet", headers = "hx-request=true")
-	String nameHtmx(Map<String, Object> model, @RequestParam String name) {
-		name(model, name);
-		return "greet :: content";
 	}
 
 }

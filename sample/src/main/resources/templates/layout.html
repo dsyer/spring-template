@@ -37,22 +37,12 @@
                 <button aria-hidden="true" type="button" data-nav-expander class="iconbutton"
                     aria-pressed="false"></button>
             </div>
-            <ul role="list" th:remove="all">
-                <li th:fragment="menuItem (link,active,title,glyph,text)">
-                    <a th:href="@{__${link}__}" th:title="${title}" th:aria-current="${active==menu ? 'page' : ''}" th:hx-get="@{__${link}__}" hx-push-url="true">
-                        <span th:class="'fa fa-'+${glyph}" class="fa fa-home"></span>
-                        <span th:text="${text}">Template</span>
+            <ul th:fragment="menu" role="list" id="menus" hx-swap-oob="true">
+                <li th:each="menu : ${app.menus}">
+                    <a th:title="${menu.title}" th:aria-current="${menu.active? 'page' : ''}" th:hx-get="${menu.path}" hx-push-url="true">
+                        <span th:class="'fa fa-'+${menu.glyph}"></span>
+                        <span th:text="${menu.name}">Template</span>
                     </a>
-                </li>
-            </ul>
-            <ul role="list">
-                <li th:replace="~{::menuItem ('/','home','home page','home','Home')}">
-                    <span class="fa fa-home" aria-hidden="true"></span>
-                    <span>Home</span>
-                </li>
-                <li th:replace="~{::menuItem ('/greet','greet','greet','thumbs-up','Greet')}">
-                    <span class="fa fa-code" aria-hidden="true"></span>
-                    <span>Code</span>
                 </li>
             </ul>
         </nav>

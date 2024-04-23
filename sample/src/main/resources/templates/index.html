@@ -4,12 +4,15 @@
 
 <body>
 
-    <h2 th:text="#{welcome}">Welcome</h2>
-    <p>
-        <span th:text="${message}">Hello</span><br />
-        <span th:text="${time}">21:00</span>
-    </p>
+    <main th:fragment="main" hx-swap-oob="true:main">
 
+        <h2 th:text="#{welcome}">Welcome</h2>
+        <p>
+            <span th:text="${message}">Hello</span><br />
+            <span th:text="${time}">21:00</span>
+        </p>
+
+    </main>
 
 </body>
 

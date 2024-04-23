@@ -24,7 +24,7 @@ public interface PathGenerator {
 
 	List<String> generate(String path);
 
-	static PathGenerator simple() {
+	static PathGenerator identity() {
 		return path -> List.of(path);
 	}
 
