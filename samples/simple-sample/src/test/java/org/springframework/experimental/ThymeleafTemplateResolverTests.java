@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.springframework.template.thymeleaf;
+package org.springframework.experimental;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,6 +28,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.template.Template;
+import org.springframework.template.thymeleaf.ThymeleafTemplateResolver;
 import org.springframework.util.MimeTypeUtils;
 import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
@@ -76,7 +77,7 @@ public class ThymeleafTemplateResolverTests {
 
 		assertEquals("Hello, World!", result);
 	}
-	
+
 	@Test
 	public void testResolveAndRenderFragment() throws Exception {
 		Template template = resolver.resolve("fragments :: hello");

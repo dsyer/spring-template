@@ -21,31 +21,13 @@ package org.springframework.template.thymeleaf;
 import java.util.Locale;
 import java.util.Map;
 
-import org.thymeleaf.ITemplateEngine;
-import org.thymeleaf.TemplateSpec;
 import org.thymeleaf.context.Context;
+import org.thymeleaf.context.IContext;
 
-public class ThymeleafTemplate implements org.springframework.template.Template {
+public interface ContextFactory {
 
-	private final TemplateSpec template;
-	private final ITemplateEngine engine;
-	private final Locale locale;
-	private final ContextFactory factory;
+	ContextFactory DEFAULT = (context, locale) -> new Context(locale, context);
 
-	public ThymeleafTemplate(ITemplateEngine engine, TemplateSpec template) {
-		this(engine, ContextFactory.DEFAULT, template, Locale.getDefault());
-	}
-
-	public ThymeleafTemplate(ITemplateEngine engine, ContextFactory factory, TemplateSpec template, Locale locale) {
-		this.engine = engine;
-		this.factory = factory;
-		this.template = template;
-		this.locale = locale;
-	}
-
-	@Override
-	public String render(Map<String, Object> context) {
-		return engine.process(template, factory.create(context, locale));
-	}
+	IContext create(Map<String, Object> context, Locale locale);
 
 }

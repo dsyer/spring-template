@@ -9,14 +9,14 @@
 	</parent>
 
 	<groupId>org.springframework.experimental</groupId>
-	<artifactId>spring-template-parent</artifactId>
+	<artifactId>spring-template-samples</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>Spring Template Parent</name>
+	<name>Spring Template Samples Parent</name>
 
 	<modules>
-		<module>spring-template</module>
-		<module>samples</module>
+		<module>simple-sample</module>
+		<module>webmvc-sample</module>
 	</modules>
 
 	<properties>

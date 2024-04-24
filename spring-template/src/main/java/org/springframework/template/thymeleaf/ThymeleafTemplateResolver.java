@@ -51,13 +51,19 @@ import org.thymeleaf.templateresolver.TemplateResolution;
 public class ThymeleafTemplateResolver implements TemplateResolver {
 
 	private final TemplateEngine engine;
+	private final ContextFactory factory;
 
 	private MimeType type = MimeTypeUtils.ALL;
 	private TemplateMode mode;
 	private PathGenerator paths = PathGenerator.infix("templates/", ".html");
 
 	public ThymeleafTemplateResolver(TemplateEngine engine) {
+		this(engine, ContextFactory.DEFAULT);
+	}
+
+	public ThymeleafTemplateResolver(TemplateEngine engine, ContextFactory factory) {
 		this.engine = engine;
+		this.factory = factory;
 	}
 
 	public void setType(MimeType type) {
@@ -92,10 +98,10 @@ public class ThymeleafTemplateResolver implements TemplateResolver {
 				TemplateResolution template = resolver.resolveTemplate(engine.getConfiguration(), null, key, null);
 				if (template != null && template.getTemplateResource().exists() && this.type.isCompatibleWith(type)) {
 					if (this.mode != null) {
-						return new ThymeleafTemplate(engine, new TemplateSpec(key, spec.selectors(), this.mode, null),
+						return new ThymeleafTemplate(engine, factory, new TemplateSpec(key, spec.selectors(), this.mode, null),
 								locale);
 					}
-					return new ThymeleafTemplate(engine, new TemplateSpec(key, spec.selectors(), type.toString(), null),
+					return new ThymeleafTemplate(engine, factory, new TemplateSpec(key, spec.selectors(), type.toString(), null),
 							locale);
 				}
 			}
