@@ -6,13 +6,7 @@ import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
-import org.springframework.web.context.annotation.RequestScope;
 
-@Component
-@ConfigurationProperties("app")
-@RequestScope
 public class Application implements Parameterized {
 
 	private static Log logger = LogFactory.getLog(Application.class);

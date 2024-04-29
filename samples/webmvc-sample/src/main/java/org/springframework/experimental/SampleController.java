@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.template.webmvc.View;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,32 +18,21 @@ public class SampleController {
 		this.application = application;
 	}
 
-	@GetMapping(path = "/",  headers = "hx-request=true")
-	String index(Map<String, Object> model) {
+	@GetMapping(path = "/")
+	@View(name = "index::main,layout::menu", headers = "hx-request=true")
+	void index(Map<String, Object> model) {
 		menu(model, "home");
 		model.put("message", "Welcome");
 		model.put("time", new Date());
-		return "index::main,layout::menu";
-	}
-
-	@GetMapping(path = "/")
-	String indexFullPage(Map<String, Object> model) {
-		index(model);
-		return "index";
-	}
-
-	@GetMapping(path = "/greet",  headers = "hx-request=true")
-	String greet(Map<String, Object> model) {
-		menu(model, "greet");
-		model.put("greeting", "Hello World");
-		model.put("time", new Date());
-		return "greet::main,layout::menu";
 	}
 
 	@GetMapping(path = "/greet")
-	String greetFullPage(Map<String, Object> model) {
-		greet(model);
-		return "greet";
+	@View(name = "greet::main,layout::menu", headers = "hx-request=true")
+	@View(name = "greet")
+	void greet(Map<String, Object> model) {
+		menu(model, "greet");
+		model.put("greeting", "Hello World");
+		model.put("time", new Date());
 	}
 
 	@GetMapping(path = "/menu")
@@ -58,11 +48,12 @@ public class SampleController {
 	}
 
 	@PostMapping(path = "/greet")
-	String name(Map<String, Object> model, @RequestParam String name) {
+	@View(name = "greet::main,layout::menu", headers = "hx-request=true")
+	@View(name = "greet")
+	void name(Map<String, Object> model, @RequestParam String name) {
 		greet(model);
 		model.put("greeting", "Hello " + name);
 		model.put("name", name);
-		return "greet";
 	}
 
 }
