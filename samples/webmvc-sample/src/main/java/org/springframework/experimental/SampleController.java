@@ -4,9 +4,9 @@ import java.util.Date;
 import java.util.Map;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.template.webmvc.View;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
@@ -19,20 +19,25 @@ public class SampleController {
 	}
 
 	@GetMapping(path = "/")
-	@View(name = "index::main,layout::menu", headers = "hx-request=true")
-	void index(Map<String, Object> model) {
+	String index(Map<String, Object> model, @RequestHeader(name = "hx-request", required = false) String hx) {
 		menu(model, "home");
 		model.put("message", "Welcome");
 		model.put("time", new Date());
+		if ("true".equals(hx)) {
+			return "index::main,layout::menu";
+		}
+		return "index";
 	}
 
 	@GetMapping(path = "/greet")
-	@View(name = "greet::main,layout::menu", headers = "hx-request=true")
-	@View(name = "greet")
-	void greet(Map<String, Object> model) {
+	String greet(Map<String, Object> model, @RequestHeader(name = "hx-request", required = false) String hx) {
 		menu(model, "greet");
 		model.put("greeting", "Hello World");
 		model.put("time", new Date());
+		if ("true".equals(hx)) {
+			return "greet::main,layout::menu";
+		}
+		return "greet";
 	}
 
 	@GetMapping(path = "/menu")
@@ -48,12 +53,15 @@ public class SampleController {
 	}
 
 	@PostMapping(path = "/greet")
-	@View(name = "greet::main,layout::menu", headers = "hx-request=true")
-	@View(name = "greet")
-	void name(Map<String, Object> model, @RequestParam String name) {
-		greet(model);
+	String name(Map<String, Object> model, @RequestParam String name,
+			@RequestHeader(name = "hx-request", required = false) String hx) {
+		greet(model, hx);
 		model.put("greeting", "Hello " + name);
 		model.put("name", name);
+		if ("true".equals(hx)) {
+			return "greet::main,layout::menu";
+		}
+		return "greet";
 	}
 
 }

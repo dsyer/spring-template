@@ -12,7 +12,6 @@ import org.springframework.template.thymeleaf.ThymeleafTemplateResolver;
 import org.springframework.template.thymeleaf.WebContextFactory;
 import org.springframework.template.webmvc.MultiViewResolver;
 import org.springframework.template.webmvc.TemplateReturnValueHandler;
-import org.springframework.template.webmvc.WebMvcConfigurationPostProcessor;
 import org.springframework.web.context.annotation.RequestScope;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -42,11 +41,6 @@ public class WebmvcApplication {
 	@Bean
 	public MultiViewResolver multiViewResolverultiViewResolver(TemplateResolver engine) {
 		return new MultiViewResolver(engine);
-	}
-
-	@Bean
-	public static WebMvcConfigurationPostProcessor webMvcConfigurationWrapper() {
-		return new WebMvcConfigurationPostProcessor();
 	}
 
 	@Bean
