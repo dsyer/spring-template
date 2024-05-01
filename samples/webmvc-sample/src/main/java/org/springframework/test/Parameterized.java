@@ -1,4 +1,4 @@
-package org.springframework.experimental;
+package org.springframework.test;
 
 import java.util.Map;
 import java.util.function.Consumer;

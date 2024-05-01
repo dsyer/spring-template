@@ -1,4 +1,4 @@
-package org.springframework.experimental;
+package org.springframework.test;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(SampleController.class)
+@WebMvcTest(controllers = SampleController.class, properties = "spring.test.mockmvc.print=NONE")
 public class SampleControllerTests {
 
 	@Autowired

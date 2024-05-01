@@ -16,6 +16,7 @@
 
 	<modules>
 		<module>spring-template</module>
+		<module>spring-boot-starter-template</module>
 		<module>samples</module>
 	</modules>
 

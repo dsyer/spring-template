@@ -1,4 +1,4 @@
-package org.springframework.experimental;
+package org.springframework.test;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;

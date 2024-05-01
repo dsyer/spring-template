@@ -1,0 +1,2 @@
+org.springframework.template.TemplateAutoConfiguration
+org.springframework.template.webmvc.TemplateMvcAutoConfiguration
