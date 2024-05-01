@@ -23,7 +23,6 @@ import java.util.Map;
 
 import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.TemplateSpec;
-import org.thymeleaf.context.Context;
 
 public class ThymeleafTemplate implements org.springframework.template.Template {
 
