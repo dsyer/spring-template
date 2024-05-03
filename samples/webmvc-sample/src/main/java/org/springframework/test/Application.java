@@ -2,12 +2,11 @@ package org.springframework.test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class Application implements Parameterized {
+public class Application {
 
 	private static Log logger = LogFactory.getLog(Application.class);
 
@@ -21,14 +20,6 @@ public class Application implements Parameterized {
 	}
 
 	private List<Menu> menus = new ArrayList<>();
-
-	@Override
-	public void accept(Map<String, String> params) {
-		if (params.containsKey("active")) {
-			String name = params.get("active");
-			activate(name);
-		}
-	}
 
 	public void activate(String name) {
 		for (Menu menu : menus) {
